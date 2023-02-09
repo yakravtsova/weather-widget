@@ -1,18 +1,9 @@
 <template>
   <div class="weather-wrap">
-    <div v-if="!w.city">
-      <h2 class="error">
-        Не удалось определить ваше местоположение,
-        <br />
-        потому что вы мудак.
-      </h2>
-    </div>
-    <div v-else>
-      <img :src="w.iconUrl" />
-      <h2 class="city">{{ w.city }}</h2>
-      <p class="temp">{{ w.temp }}</p>
-      <p class="weather">{{ w.weather }}</p>
-    </div>
+    <img :src="w.iconUrl" />
+    <h2 class="city">{{ w.city }}</h2>
+    <p class="temp">{{ w.temp }}</p>
+    <p class="weather">{{ w.weather }}</p>
   </div>
 </template>
 

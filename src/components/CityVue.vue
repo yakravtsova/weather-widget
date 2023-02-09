@@ -1,6 +1,6 @@
 <template>
   <div class="city-container">
-    <p class="city-name">{{ c }}</p>
+    <p class="city-name">{{ c.city }}</p>
     <button @click="deleteCity">Удалить</button>
   </div>
 </template>
@@ -12,7 +12,7 @@ export default {
   methods: {
     deleteCity(e) {
       e.preventDefault();
-      this.$store.dispatch("removeCity", this.c);
+      this.$store.dispatch("removeCity", this.c.city);
       console.log("click");
     },
   },
