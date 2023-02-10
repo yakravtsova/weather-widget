@@ -1,24 +1,10 @@
-# hello-vue
+# Тестовое задание Weather-widget
 
-## Project setup
-```
-npm install
-```
+Для установки виджета на свой сайт просто скопируйте и вставьте этот код:
 
-### Compiles and hot-reloads for development
 ```
-npm run serve
+<weather-widget /> 
+<script src="https://yakravtsova.github.io/weather-widget-app/dist/js/app.js"></script>
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Пример работы виджета: https://yakravtsova.github.io/russian-travel-by-yakravtsova/index.html
