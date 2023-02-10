@@ -39,6 +39,14 @@
         margin: 0 0 15px;
     }
 
+    &__icon {
+        svg {
+            margin-bottom: -2px;
+            width: 14px;
+            height: 14px;
+        }
+    }
+
     &__error {
       color: red;
     }

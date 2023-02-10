@@ -13,7 +13,7 @@
           v-for="w in weatherData"
           :key="w.city"
         >
-          <i class="fa-solid fa-bars handle"></i>
+          <Menu class="handle" />
           <CityVue v-bind:c="w" />
         </li>
       </draggable>
@@ -29,7 +29,8 @@
             v-model="query"
           />
           <button class="settings__button" type="submit">
-            <i class="fa-solid fa-plus"></i>
+            <Plus />
+            <!--<i class="fa-solid fa-plus"></i>-->
           </button>
         </div>
         <span
@@ -44,6 +45,8 @@
 
 <script>
 import CityVue from "@/components/CityVue/CityVue.vue";
+import Menu from "vue-material-design-icons/Menu.vue";
+import Plus from "vue-material-design-icons/Plus.vue";
 
 import draggable from "vuedraggable";
 
@@ -100,7 +103,7 @@ export default {
       this.$store.dispatch("setOrder");
     },
   },
-  components: { CityVue, draggable },
+  components: { CityVue, draggable, Menu, Plus },
 };
 </script>
 

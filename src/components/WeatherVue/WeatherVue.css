@@ -33,6 +33,11 @@
   font-size: 12px;
   margin: 0 0 15px;
 }
+.weather-item__icon svg {
+  margin-bottom: -2px;
+  width: 14px;
+  height: 14px;
+}
 .weather-item__error {
   color: red;
 }

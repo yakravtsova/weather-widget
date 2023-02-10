@@ -1,2 +1,2 @@
-.city{flex-grow:1;display:flex;align-items:center;justify-content:space-between;margin:0 10px}.city__trash{width:40px;height:40px;margin:0;padding:0;border:none;background-color:rgba(0,0,0,0);cursor:pointer}
+.city{flex-grow:1;display:flex;align-items:center;justify-content:space-between;margin:0 10px}.city__trash{width:40px;height:40px;margin:0;padding:0;border:none;background-color:rgba(0,0,0,0);cursor:pointer}.city__trash svg{margin-top:4px;height:20px;width:20px}
 /*# sourceMappingURL=CityVue.min.css.map */

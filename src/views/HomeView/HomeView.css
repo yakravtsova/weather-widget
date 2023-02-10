@@ -16,6 +16,11 @@ body {
   flex-direction: column;
   align-items: center;
   border: 1px solid #f0f0f0;
+  background-color: #fff;
+}
+.weather-board__cog svg {
+  width: 20px;
+  height: 20px;
 }
 .weather-board__list {
   margin: 0;

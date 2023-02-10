@@ -9,10 +9,10 @@
       <p class="weather-item__description">{{ description }}</p>
       <div class="weather-item__container">
         <p class="weather-item__data">
-          <i class="fa-solid fa-location-arrow"></i>{{ windParams }}
+          <NearMe class="weather-item__icon" />{{ windParams }}
         </p>
         <p class="weather-item__data">
-          <i class="fa-solid fa-gauge"></i>{{ pressure }}
+          <Speedometer class="weather-item__icon" />{{ pressure }}
         </p>
       </div>
       <div class="weather-item__container">
@@ -31,10 +31,13 @@
 </template>
 
 <script>
+import NearMe from "vue-material-design-icons/NearMe.vue";
+import Speedometer from "vue-material-design-icons/Speedometer.vue";
+
 export default {
   name: "WeatherVue",
   props: ["w"],
-
+  components: { NearMe, Speedometer },
   computed: {
     cityHeader() {
       if (this.w.isOk) {

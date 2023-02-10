@@ -1,7 +1,8 @@
 <template>
   <div class="weather-board">
     <button @click="handleSettingsOpen" class="weather-board__button">
-      <i class="icon fa-solid fa-gear"></i>
+      <Cog v-if="!isSettingsOpened" class="weather-board__cog" />
+      <Close v-else />
     </button>
     <p class="weather-board__error" v-if="!isGeoOn || !cities.length">
       {{ errorMessage }}
@@ -20,6 +21,8 @@
 <script>
 import SettingsVue from "@/components/SettingsVue/SettingsVue.vue";
 import WeatherVue from "@/components/WeatherVue/WeatherVue.vue";
+import Close from "vue-material-design-icons/Close.vue";
+import Cog from "vue-material-design-icons/Cog.vue";
 
 export default {
   name: "HomeView",
@@ -37,6 +40,8 @@ export default {
   components: {
     WeatherVue,
     SettingsVue,
+    Cog,
+    Close,
   },
   computed: {
     cities() {
@@ -77,8 +82,6 @@ export default {
       this.isSettingsOpened = !this.isSettingsOpened;
       this.$store.dispatch("setIsData", true);
       this.$store.dispatch("setIsAdded", true);
-      const icon = document.querySelector(".icon");
-      icon.classList.add(this.isSettingsOpened ? "fa-xmark" : "fa-gear");
     },
   },
   async created() {

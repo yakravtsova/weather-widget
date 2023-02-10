@@ -16,6 +16,14 @@ body {
     flex-direction: column;
     align-items: center;
     border: 1px solid #f0f0f0;
+    background-color: #fff;
+
+    &__cog {
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
 
     &__list {
         margin: 0;

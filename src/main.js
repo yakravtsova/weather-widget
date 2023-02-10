@@ -12,7 +12,3 @@ new Vue({
   store,
   render: (h) => h(App),
 }).$mount("#app");
-
-/**
- * @todo Выводить экран ошибки, если api недоступно
- */
