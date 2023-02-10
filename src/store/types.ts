@@ -10,6 +10,9 @@ export type Weather = {
   clouds: string;
   visibility: number;
   iconUrl: string;
+  dewPoint: number;
+  daylight: number;
+  isOk: boolean;
   order: number;
 };
 
@@ -23,4 +26,6 @@ export interface RootState {
   cities: City[];
   isGeoOn: boolean;
   isData: boolean;
+  isAdded: boolean;
+  isAvailable: boolean;
 }

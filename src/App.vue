@@ -4,15 +4,7 @@
 
 <script>
 // @ is an alias to /src
-export default {
-  data() {
-    return {
-      query: "",
-      data: {},
-      init: {},
-    };
-  },
-};
+export default {};
 </script>
 
 <style></style>

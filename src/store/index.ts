@@ -2,63 +2,19 @@ import Vue from "vue";
 import Vuex, { StoreOptions } from "vuex";
 import { RootState, Weather, City } from "./types";
 import axios from "axios";
+import { baseUrl } from "../utils/constants";
+import { getWeather } from "../utils/utils";
 
 Vue.use(Vuex);
-
-const baseUrl =
-  "https://api.openweathermap.org/data/2.5/weather?units=metric&appid=5b5354f08b947e045f34636102f4457f&";
-const iconPath = "http://openweathermap.org/img/wn/";
-const iconExtension = "@2x.png";
-
-const degToCompass = (deg: number) => {
-  const val: number = Math.floor(deg / 22.5 + 0.5);
-  const arr: string[] = [
-    "N",
-    "NNE",
-    "NE",
-    "ENE",
-    "E",
-    "ESE",
-    "SE",
-    "SSE",
-    "S",
-    "SSW",
-    "SW",
-    "WSW",
-    "W",
-    "WNW",
-    "NW",
-    "NNW",
-  ];
-  return arr[val % 16];
-};
-
-const getWeather = (data: any): Weather => {
-  const cloudsData = data.weather[0].description;
-  const formattedCloudsData =
-    cloudsData.charAt(0).toUpperCase() + cloudsData.slice(1);
-  return {
-    city: data.name,
-    country: data.sys.country,
-    temp: data.main.temp,
-    feelsLike: data.main.feels_like,
-    pressure: data.main.pressure,
-    humidity: data.main.humidity,
-    windSpeed: data.wind.speed,
-    windDirection: degToCompass(data.wind.deg),
-    clouds: formattedCloudsData,
-    visibility: data.visibility,
-    iconUrl: `${iconPath}${data.weather[0].icon}${iconExtension}`,
-    order: 0,
-  };
-};
 
 const store: StoreOptions<RootState> = {
   state: {
     weatherData: [],
     cities: [],
-    isGeoOn: false,
+    isGeoOn: true,
     isData: true,
+    isAdded: true,
+    isAvailable: true,
   },
   getters: {
     CITIES(state) {
@@ -73,6 +29,12 @@ const store: StoreOptions<RootState> = {
     IS_DATA(state) {
       return state.isData;
     },
+    IS_ADDED(state) {
+      return state.isAdded;
+    },
+    IS_AVAILABLE(state) {
+      return state.isAvailable;
+    },
   },
   mutations: {
     SET_IS_GEO_ON(state, status) {
@@ -83,19 +45,21 @@ const store: StoreOptions<RootState> = {
       state.isData = status;
     },
 
+    SET_IS_ADDED(state, status) {
+      state.isAdded = status;
+    },
+
+    SET_IS_AVAILABLE(state, status) {
+      state.isAvailable = status;
+    },
+
     SET_CITIES(state, cities) {
       state.cities = cities;
     },
 
-    ADD_CITIES(state, city) {
-      if (state.cities === null) {
-        state.cities = [];
-      }
-      if (!state.cities.find((c) => c.city === city)) {
-        const cityObj: City = { city: city, order: state.cities.length };
-        state.cities.push(cityObj);
-        localStorage.setItem("cities", JSON.stringify(state.cities));
-      } else return;
+    ADD_CITIES(state, cityObj) {
+      state.cities.push(cityObj);
+      localStorage.setItem("cities", JSON.stringify(state.cities));
     },
 
     SET_WEATHER_DATA(state, weatherData) {
@@ -103,12 +67,12 @@ const store: StoreOptions<RootState> = {
     },
 
     ADD_WEATHER_DATA(state, weatherData) {
-      state.weatherData = [...state.weatherData, weatherData];
-      //state.weatherData.push(weatherData);
+      if (!state.weatherData.find((w) => w.city === weatherData.city)) {
+        state.weatherData = [...state.weatherData, weatherData];
+      } else return;
     },
 
     REMOVE_CITY_WEATHER_DATA(state, city) {
-      console.log(city);
       state.weatherData = state.weatherData.filter((w) => w.city !== city);
       state.weatherData.forEach(
         (w) => (w.order = state.weatherData.indexOf(w))
@@ -116,12 +80,20 @@ const store: StoreOptions<RootState> = {
     },
   },
   actions: {
+    setIsSettingsOpened({ commit }) {
+      commit("SET_IS_SETTINGS_OPENED");
+    },
+
     setIsGeoOn({ commit }, status) {
       commit("SET_IS_GEO_ON", status);
     },
 
     setIsData({ commit }, status) {
       commit("SET_IS_DATA", status);
+    },
+
+    setIsAdded({ commit }, status) {
+      commit("SET_IS_ADDED", status);
     },
 
     setCities({ commit }, cities) {
@@ -133,7 +105,9 @@ const store: StoreOptions<RootState> = {
       state.cities = state.weatherData.map((w) => {
         return { city: w.city, order: w.order };
       });
-      localStorage.setItem("cities", JSON.stringify(state.cities));
+      state.cities.length === 0
+        ? localStorage.removeItem("cities")
+        : localStorage.setItem("cities", JSON.stringify(state.cities));
       commit("SET_CITIES", state.cities);
     },
 
@@ -158,25 +132,28 @@ const store: StoreOptions<RootState> = {
         .then((res) => {
           commit("SET_IS_DATA", true);
           commit("SET_IS_GEO_ON", true);
-          console.log("jkjkj");
-          const result: Weather = getWeather(res.data);
-          result.order = state.weatherData.length;
-          commit("ADD_CITIES", result.city);
-          commit("ADD_WEATHER_DATA", result);
+          if (!state.cities.find((c) => c.city === res.data.name)) {
+            const result: Weather = getWeather(res.data);
+            result.order = state.weatherData.length;
+            const cityObj: City = {
+              city: result.city,
+              order: state.cities.length,
+            };
+            commit("SET_IS_ADDED", true);
+            commit("ADD_CITIES", cityObj);
+            commit("ADD_WEATHER_DATA", result);
+          } else {
+            commit("SET_IS_ADDED", false);
+            commit("SET_IS_DATA", true);
+          }
         })
         .catch(function (error) {
           commit("SET_IS_DATA", false);
           if (error.response) {
-            // Запрос был сделан, и сервер ответил кодом состояния, который
-            // выходит за пределы 2xx
             console.log(error.response.data);
           } else if (error.request) {
-            // Запрос был сделан, но ответ не получен
-            // `error.request`- это экземпляр XMLHttpRequest в браузере и экземпляр
-            // http.ClientRequest в node.js
             console.log(error.request);
           } else {
-            // Произошло что-то при настройке запроса, вызвавшее ошибку
             console.log("Error", error.message);
           }
         });
@@ -186,27 +163,41 @@ const store: StoreOptions<RootState> = {
       for (const c of state.cities) {
         const q = { q: c.city };
         const searchString = new URLSearchParams(q).toString();
+        let result: Weather = {
+          city: c.city,
+          country: "",
+          temp: 0,
+          feelsLike: 0,
+          pressure: 0,
+          humidity: 0,
+          windSpeed: 0,
+          windDirection: "",
+          clouds: "",
+          visibility: 0,
+          iconUrl: "",
+          dewPoint: 0,
+          daylight: 0,
+          isOk: false,
+          order: c.order,
+        };
         await axios(`${baseUrl}${searchString}`)
           .then((res) => {
             commit("SET_IS_DATA", true);
             commit("SET_IS_GEO_ON", true);
-            const result: Weather = getWeather(res.data);
-            result.order = state.cities.indexOf(c);
+            result = getWeather(res.data);
+            result.isOk = true;
+            result.order = c.order;
             commit("ADD_WEATHER_DATA", result);
           })
           .catch(function (error) {
+            result.isOk = false;
+            commit("ADD_WEATHER_DATA", result);
             commit("SET_IS_DATA", false);
             if (error.response) {
-              // Запрос был сделан, и сервер ответил кодом состояния, который
-              // выходит за пределы 2xx
               console.log(error.response.data);
             } else if (error.request) {
-              // Запрос был сделан, но ответ не получен
-              // `error.request`- это экземпляр XMLHttpRequest в браузере и экземпляр
-              // http.ClientRequest в node.js
               console.log(error.request);
             } else {
-              // Произошло что-то при настройке запроса, вызвавшее ошибку
               console.log("Error", error.message);
             }
           });

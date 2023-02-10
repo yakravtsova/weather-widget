@@ -1,0 +1,45 @@
+.weather-item {
+    width: 210px;
+    min-height: 240px;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 10px;
+    box-sizing: border-box;
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    &__city {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__img {
+        width: 90px;
+        height: 90px;
+    }
+
+    &__temp {
+        font-size: 30px;
+        margin: 0 5px 0 0;
+    }
+
+    &__description {
+        font-size: 14px;
+        margin: 0 0 15px;
+    }
+
+    &__data {
+        font-size: 12px;
+        margin: 0 0 15px;
+    }
+
+    &__error {
+      color: red;
+    }
+}

@@ -1,7 +1,9 @@
 <template>
-  <div class="city-container">
+  <div class="city">
     <p class="city-name">{{ c.city }}</p>
-    <button @click="deleteCity">Удалить</button>
+    <button class="city__trash" @click="deleteCity">
+      <i class="fa-solid fa-trash"></i>
+    </button>
   </div>
 </template>
 
@@ -13,19 +15,11 @@ export default {
     deleteCity(e) {
       e.preventDefault();
       this.$store.dispatch("removeCity", this.c.city);
-      console.log("click");
     },
   },
 };
 </script>
 
 <style>
-.city-container {
-  display: flex;
-  align-items: center;
-  border: 1px solid #000;
-}
-.city-name {
-  margin: 0 10px 0 0;
-}
+@import "./CityVue.css";
 </style>
